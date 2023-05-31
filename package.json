@@ -4,13 +4,15 @@
   "description": "A RESTFul api for a site or app to sell items via various outlets.",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "craigslist",
     "gregslist",
-    "NodeJS",
-    "API"
+    "nodejs",
+    "api",
+    "shopping"
   ],
   "author": "Colin Stodd (https://colinstodd.com)",
   "license": "ISC",
