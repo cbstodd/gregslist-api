@@ -24,7 +24,6 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "live-server": "^1.2.2",
     "nodemon": "^2.0.22"
   }
 }
