@@ -13,8 +13,13 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-  res.status(200).json({
-    message: 'Handling POST requests to /items',
+  const newItem = {
+    id: req.body.id,
+    name: req.body.name,
+  };
+  res.status(201).json({
+    message: `New Item was created`,
+    createdItem: newItem,
   });
 });
 

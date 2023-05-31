@@ -17,9 +17,11 @@
   "author": "Colin Stodd (https://colinstodd.com)",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "dotenv": "^16.1.0",
     "express": "^4.18.2",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "live-server": "^1.2.2",
