@@ -1,22 +1,38 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-
-let items = [
-  { id: '0001', name: 'Item 1' },
-  { id: '0002', name: 'Item 2' },
-  { id: '0003', name: 'Item 3' },
-  { id: '0004', name: 'Item 4' },
-];
+const Item = require('../models/Item');
+const mongoose = require('mongoose');
+const port = process.env.PORT || 3001;
+const url = process.env.LOCAL_URL || 'localhost';
 
 router.get('/', function (req, res, next) {
-  res.status(200).json(items);
+  Item.find()
+    .exec()
+    .then((items) => {
+      console.log(items);
+      res.status(200).json({
+        count: items.length,
+        urls: items.map((item) => `http://${url}:${port}/items/${item._id}`),
+        items: items,
+      });
+    })
+    .catch((err) => console.log(err));
 });
 
 router.post('/', function (req, res, next) {
-  const newItem = {
-    id: req.body.id,
+  const newItem = new Item({
+    _id: new mongoose.Types.ObjectId(),
+    description: req.body.description,
+    imageUrl: req.body.imageUrl,
     name: req.body.name,
-  };
+    price: req.body.price,
+  });
+  newItem
+    .save()
+    .then((result) => console.log(result))
+    .catch((err) => console.log(err));
+
   res.status(201).json({
     message: `New Item was created`,
     createdItem: newItem,
@@ -25,16 +41,16 @@ router.post('/', function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
   const id = req.params.id;
-  if (id === '0001') {
-    res.status(200).json({
-      id: id,
-      name: id.name,
+  Item.findById(id)
+    .exec()
+    .then((doc) => {
+      console.log(doc);
+      res.status(200).json(doc);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
     });
-  } else {
-    res.status(200).json({
-      message: 'You passed an ID',
-    });
-  }
 });
 
 router.patch('/:id', function (req, res, next) {
