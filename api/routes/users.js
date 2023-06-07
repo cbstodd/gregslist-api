@@ -1,51 +1,67 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-
-let users = [
-  { id: '0001', name: 'user 1' },
-  { id: '0002', name: 'user 2' },
-  { id: '0003', name: 'user 3' },
-  { id: '0004', name: 'user 4' },
-];
+const User = require('../models/User');
+const mongoose = require('mongoose');
+const port = process.env.PORT || 3001;
+const url = process.env.LOCAL_URL || 'localhost';
 
 router.get('/', function (req, res, next) {
-  res.status(200).json(users);
+  User.find()
+    .exec()
+    .then((users) => {
+      console.log(users);
+      res.status(200).json({
+        count: users.length,
+        urls: users.map((User) => `http://${url}:${port}/Users/${user._id}`),
+        Users: users,
+      });
+    })
+    .catch((err) => console.log(err));
 });
 
 router.post('/', function (req, res, next) {
-  const newUser = {
-    id: req.body.id,
+  const newUser = new User({
+    _id: new mongoose.Types.ObjectId(),
+    description: req.body.description,
+    imageUrl: req.body.imageUrl,
     name: req.body.name,
-  };
+    price: req.body.price,
+  });
+  newUser
+    .save()
+    .then((result) => console.log(result))
+    .catch((err) => console.log(err));
+
   res.status(201).json({
-    message: 'New User was created! ',
+    message: `New User was created`,
     createdUser: newUser,
   });
 });
 
 router.get('/:id', function (req, res, next) {
   const id = req.params.id;
-  if (id === '0001') {
-    res.status(200).json({
-      id: id,
-      name: id.name,
+  User.findById(id)
+    .exec()
+    .then((doc) => {
+      console.log(doc);
+      res.status(200).json(doc);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
     });
-  } else {
-    res.status(200).json({
-      message: 'You passed an ID',
-    });
-  }
 });
 
 router.patch('/:id', function (req, res, next) {
   res.status(200).json({
-    message: 'Updated user',
+    message: 'Updated User',
   });
 });
 
 router.delete('/:id', function (req, res, next) {
   res.status(200).json({
-    message: 'Deleted user',
+    message: 'Deleted User',
   });
 });
 
